@@ -37,7 +37,7 @@ A web-based complaint and incident management system for barangay residents and 
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/barangay-management-system.git
+   git clone https://github.com/Lyptos/barangay-management-system.git
    cd barangay-management-system
    ```
 
