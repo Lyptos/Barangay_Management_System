@@ -1,7 +1,7 @@
 <nav class="navbar">
     <div class="container">
         <div class="nav-brand">
-            <a href="<?php echo SITE_URL; ?>/index.php"><?php echo SITE_NAME; ?></a>
+            <a href="<?php echo SITE_URL; ?>/public/index.php"><?php echo SITE_NAME; ?></a>
         </div>
         <ul class="nav-menu">
             <?php if (isLoggedIn()): ?>
