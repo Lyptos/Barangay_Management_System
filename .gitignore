@@ -1,0 +1,24 @@
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# PHP
+*.log
+
+# Database - Don't commit database credentials in production
+# includes/config.php
+
+# Temporary files
+tmp/
+temp/
+cache/
+
+# User uploaded files (if any in future)
+uploads/
