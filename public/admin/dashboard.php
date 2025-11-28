@@ -6,15 +6,11 @@ require_once '../../includes/auth.php';
 requireLogin();
 requireAdmin();
 
-$stats = getComplaintStats();
+$stats = getIncidentStats();
+$recent_incidents = getIncidents();
 
-$db = new Database();
-$conn = $db->connect();
-
-// Get recent complaints
-$recent_complaints = $conn->query("SELECT i.*, CONCAT(r.FirstName, ' ', r.LastName) as full_name FROM Incidents i 
-                                   LEFT JOIN Residents r ON i.ReportedBy = r.ResidentID 
-                                   ORDER BY i.DateReported DESC LIMIT 10");
+$total_residents = getTotalResidents();
+$total_officials = getTotalOfficials();
 
 $page_title = 'Admin Dashboard';
 include '../../templates/header.php';
@@ -43,39 +39,54 @@ include '../../templates/navbar.php';
         </div>
     </div>
     
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3><?php echo $total_residents; ?></h3>
+            <p>Total Residents</p>
+        </div>
+        <div class="stat-card">
+            <h3><?php echo $total_officials; ?></h3>
+            <p>Barangay Officials</p>
+        </div>
+    </div>
+    
     <div class="card">
         <h2>Recent Complaints</h2>
-        <?php if ($recent_complaints->num_rows > 0): ?>
+        <?php if ($recent_incidents->num_rows > 0): ?>
             <table>
                 <thead>
                     <tr>
                         <th>Tracking #</th>
-                        <th>Resident</th>
-                        <th>Subject</th>
-                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Reported By</th>
                         <th>Status</th>
                         <th>Date</th>
-                        <th>Action</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while ($complaint = $recent_complaints->fetch_assoc()): ?>
+                    <?php 
+                    $count = 0;
+                    while ($incident = $recent_incidents->fetch_assoc()): 
+                        if ($count >= 10) break;
+                        $count++;
+                    ?>
                         <tr>
-                            <td><?php echo $complaint['TrackingNumber']; ?></td>
-                            <td><?php echo $complaint['full_name']; ?></td>
-                            <td><?php echo $complaint['IncidentType']; ?></td>
-                            <td><?php echo ucfirst($complaint['IncidentType']); ?></td>
-                            <td><span class="badge badge-<?php echo strtolower(str_replace(' ', '', $complaint['Status'])); ?>"><?php echo $complaint['Status']; ?></span></td>
-                            <td><?php echo date('M d, Y', strtotime($complaint['DateReported'])); ?></td>
+                            <td><?php echo $incident['TrackingNumber']; ?></td>
+                            <td><?php echo $incident['IncidentType']; ?></td>
+                            <td><?php echo $incident['resident_name']; ?></td>
+                            <td><span class="badge badge-<?php echo strtolower(str_replace(' ', '-', $incident['Status'])); ?>"><?php echo $incident['Status']; ?></span></td>
+                            <td><?php echo date('M d, Y', strtotime($incident['DateReported'])); ?></td>
                             <td>
-                                <a href="view-complaint.php?id=<?php echo $complaint['IncidentID']; ?>" class="btn btn-sm">View</a>
+                                <a href="view-complaint.php?id=<?php echo $incident['IncidentID']; ?>" class="btn btn-sm btn-primary">View</a>
                             </td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
             </table>
+            <a href="complaints.php" class="btn btn-secondary">View All Complaints</a>
         <?php else: ?>
-            <p>No complaints yet.</p>
+            <p>No complaints filed yet.</p>
         <?php endif; ?>
     </div>
 </div>

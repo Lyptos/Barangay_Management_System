@@ -30,11 +30,11 @@ function getIncidents($status = null) {
     $conn = $db->connect();
     
     $sql = "SELECT i.*, 
-            CONCAT(r.FirstName, ' ', r.LastName) as resident_name, 
-            r.ContactNumber,
+            CONCAT(u.FirstName, ' ', u.LastName) as resident_name, 
+            u.ContactNumber,
             o.FullName as handled_by_name
             FROM Incidents i 
-            LEFT JOIN Residents r ON i.ReportedBy = r.ResidentID
+            LEFT JOIN Users u ON i.ReportedBy = u.ResidentID
             LEFT JOIN Officials o ON i.HandledBy = o.OfficialID";
     
     if ($status) {
@@ -56,13 +56,13 @@ function getIncidentById($id) {
     $conn = $db->connect();
     
     $sql = "SELECT i.*, 
-            CONCAT(r.FirstName, ' ', r.LastName) as resident_name,
-            r.ContactNumber, 
-            r.Address,
-            r.Email,
+            CONCAT(u.FirstName, ' ', u.LastName) as resident_name,
+            u.ContactNumber, 
+            u.Address,
+            u.Email,
             o.FullName as handled_by_name
             FROM Incidents i 
-            LEFT JOIN Residents r ON i.ReportedBy = r.ResidentID
+            LEFT JOIN Users u ON i.ReportedBy = u.ResidentID
             LEFT JOIN Officials o ON i.HandledBy = o.OfficialID
             WHERE i.IncidentID = ?";
     
@@ -72,7 +72,7 @@ function getIncidentById($id) {
     return $stmt->get_result()->fetch_assoc();
 }
 
-function getComplaintStats() {
+function getIncidentStats() {
     $db = new Database();
     $conn = $db->connect();
     
@@ -105,7 +105,7 @@ function getResidents() {
     $db = new Database();
     $conn = $db->connect();
     
-    $sql = "SELECT * FROM Residents ORDER BY LastName, FirstName";
+    $sql = "SELECT * FROM Users WHERE Role = 'resident' ORDER BY LastName, FirstName";
     return $conn->query($sql);
 }
 
@@ -113,7 +113,7 @@ function getTotalResidents() {
     $db = new Database();
     $conn = $db->connect();
     
-    $result = $conn->query("SELECT COUNT(*) as total FROM Residents");
+    $result = $conn->query("SELECT COUNT(*) as total FROM Users WHERE Role = 'resident'");
     return $result->fetch_assoc()['total'];
 }
 

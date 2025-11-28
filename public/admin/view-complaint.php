@@ -6,14 +6,16 @@ require_once '../../includes/auth.php';
 requireLogin();
 requireAdmin();
 
-$success = '';
-$error = '';
+$incident_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$incident = getIncidentById($incident_id);
 
-if (!isset($_GET['id'])) {
-    redirect('admin/complaints.php');
+if (!$incident) {
+    header('Location: complaints.php');
+    exit();
 }
 
-$complaint_id = intval($_GET['id']);
+$success = '';
+$error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = sanitizeInput($_POST['status']);
@@ -22,21 +24,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = new Database();
     $conn = $db->connect();
     
-    $sql = "UPDATE complaints SET status = ?, admin_response = ?, updated_at = NOW() WHERE id = ?";
+    // Fixed: Use correct table and column names
+    $sql = "UPDATE Incidents SET Status = ?, AdminResponse = ? WHERE IncidentID = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssi", $status, $admin_response, $complaint_id);
+    $stmt->bind_param("ssi", $status, $admin_response, $incident_id);
     
     if ($stmt->execute()) {
         $success = "Complaint updated successfully!";
+        $incident = getIncidentById($incident_id); // Refresh data
     } else {
         $error = "Failed to update complaint.";
     }
-}
-
-$complaint = getComplaintById($complaint_id);
-
-if (!$complaint) {
-    redirect('admin/complaints.php');
 }
 
 $page_title = 'View Complaint';
@@ -61,34 +59,34 @@ include '../../templates/navbar.php';
         <div class="info-grid">
             <div class="info-item">
                 <strong>Tracking Number:</strong>
-                <p><?php echo $complaint['TrackingNumber']; ?></p>
+                <p><?php echo $incident['TrackingNumber']; ?></p>
             </div>
             <div class="info-item">
                 <strong>Status:</strong>
-                <p><span class="badge badge-<?php echo strtolower(str_replace(' ', '', $complaint['Status'])); ?>"><?php echo $complaint['Status']; ?></span></p>
+                <p><span class="badge badge-<?php echo strtolower(str_replace(' ', '-', $incident['Status'])); ?>"><?php echo $incident['Status']; ?></span></p>
             </div>
             <div class="info-item">
                 <strong>Type:</strong>
-                <p><?php echo ucfirst($complaint['IncidentType']); ?></p>
+                <p><?php echo ucfirst($incident['IncidentType']); ?></p>
             </div>
             <div class="info-item">
                 <strong>Date Filed:</strong>
-                <p><?php echo date('F d, Y', strtotime($complaint['DateReported'])); ?></p>
+                <p><?php echo date('F d, Y', strtotime($incident['DateReported'])); ?></p>
             </div>
         </div>
         
         <div class="card">
             <h3>Resident Information</h3>
-            <p><strong>Name:</strong> <?php echo $complaint['full_name']; ?></p>
-            <p><strong>Contact:</strong> <?php echo $complaint['contact_number']; ?></p>
-            <p><strong>Address:</strong> <?php echo $complaint['address']; ?></p>
+            <p><strong>Name:</strong> <?php echo $incident['resident_name']; ?></p>
+            <p><strong>Contact:</strong> <?php echo $incident['ContactNumber']; ?></p>
+            <p><strong>Address:</strong> <?php echo $incident['Address']; ?></p>
         </div>
         
         <div class="card">
             <h3>Complaint Information</h3>
-            <p><strong>Type:</strong> <?php echo $complaint['IncidentType']; ?></p>
+            <p><strong>Type:</strong> <?php echo $incident['IncidentType']; ?></p>
             <p><strong>Description:</strong></p>
-            <p><?php echo nl2br($complaint['Description']); ?></p>
+            <p><?php echo nl2br($incident['Description']); ?></p>
         </div>
         
         <div class="card">
@@ -97,16 +95,16 @@ include '../../templates/navbar.php';
                 <div class="form-group">
                     <label>Status:</label>
                     <select name="status" required>
-                        <option value="Pending" <?php echo $complaint['Status'] === 'Pending' ? 'selected' : ''; ?>>Pending</option>
-                        <option value="In Progress" <?php echo $complaint['Status'] === 'In Progress' ? 'selected' : ''; ?>>In Progress</option>
-                        <option value="Resolved" <?php echo $complaint['Status'] === 'Resolved' ? 'selected' : ''; ?>>Resolved</option>
-                        <option value="Closed" <?php echo $complaint['Status'] === 'Closed' ? 'selected' : ''; ?>>Closed</option>
+                        <option value="Pending" <?php echo $incident['Status'] === 'Pending' ? 'selected' : ''; ?>>Pending</option>
+                        <option value="In Progress" <?php echo $incident['Status'] === 'In Progress' ? 'selected' : ''; ?>>In Progress</option>
+                        <option value="Resolved" <?php echo $incident['Status'] === 'Resolved' ? 'selected' : ''; ?>>Resolved</option>
+                        <option value="Closed" <?php echo $incident['Status'] === 'Closed' ? 'selected' : ''; ?>>Closed</option>
                     </select>
                 </div>
                 
                 <div class="form-group">
                     <label>Admin Response:</label>
-                    <textarea name="admin_response" rows="5"><?php echo $complaint['admin_response']; ?></textarea>
+                    <textarea name="admin_response" rows="5"><?php echo $incident['AdminResponse']; ?></textarea>
                 </div>
                 
                 <button type="submit" class="btn btn-primary">Update Complaint</button>

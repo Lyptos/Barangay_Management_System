@@ -5,11 +5,8 @@ function login($username, $password, $isAdmin = false) {
     $db = new Database();
     $conn = $db->connect();
     
-    if ($isAdmin) {
-        $sql = "SELECT * FROM Admins WHERE Username = ?";
-    } else {
-        $sql = "SELECT * FROM Residents WHERE Email = ?";
-    }
+    // Query the Users table (can login with email)
+    $sql = "SELECT * FROM Users WHERE Email = ?";
     
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $username);
@@ -20,16 +17,10 @@ function login($username, $password, $isAdmin = false) {
         $user = $result->fetch_assoc();
         
         if (password_verify($password, $user['Password'])) {
-            if ($isAdmin) {
-                $_SESSION['user_id'] = $user['AdminID'];
-                $_SESSION['username'] = $user['Username'];
-                $_SESSION['full_name'] = $user['FullName'];
-            } else {
-                $_SESSION['user_id'] = $user['ResidentID'];
-                $_SESSION['username'] = $user['Email'];
-                $_SESSION['full_name'] = $user['FirstName'] . ' ' . $user['LastName'];
-            }
-            $_SESSION['role'] = $isAdmin ? 'admin' : 'resident';
+            $_SESSION['user_id'] = $user['ResidentID'];
+            $_SESSION['username'] = $user['Email'];
+            $_SESSION['full_name'] = $user['FirstName'] . ' ' . $user['LastName'];
+            $_SESSION['role'] = $user['Role']; // 'admin' or 'resident'
             return true;
         }
     }
@@ -41,7 +32,7 @@ function register($first_name, $last_name, $email, $password, $contact_number, $
     $conn = $db->connect();
     
     // Check if email already exists
-    $check_sql = "SELECT ResidentID FROM Residents WHERE Email = ?";
+    $check_sql = "SELECT ResidentID FROM Users WHERE Email = ?";
     $check_stmt = $conn->prepare($check_sql);
     $check_stmt->bind_param("s", $email);
     $check_stmt->execute();
@@ -52,7 +43,7 @@ function register($first_name, $last_name, $email, $password, $contact_number, $
     
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     
-    $sql = "INSERT INTO Residents (FirstName, LastName, Email, Password, ContactNumber, Address, BirthDate, Gender, Role) 
+    $sql = "INSERT INTO Users (FirstName, LastName, Email, Password, ContactNumber, Address, BirthDate, Gender, Role) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'resident')";
     
     $stmt = $conn->prepare($sql);
@@ -63,7 +54,8 @@ function register($first_name, $last_name, $email, $password, $contact_number, $
 
 function logout() {
     session_destroy();
-    redirect('public/index.php');
+    header('Location: ' . SITE_URL . '/public/index.php');
+    exit();
 }
 
 function requireLogin() {

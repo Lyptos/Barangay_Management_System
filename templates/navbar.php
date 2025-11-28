@@ -1,3 +1,4 @@
+
 <nav class="navbar">
     <div class="container">
         <div class="nav-brand">
@@ -9,12 +10,14 @@
                     <li><a href="<?php echo SITE_URL; ?>/public/admin/dashboard.php">Dashboard</a></li>
                     <li><a href="<?php echo SITE_URL; ?>/public/admin/complaints.php">Complaints</a></li>
                     <li><a href="<?php echo SITE_URL; ?>/public/admin/residents.php">Residents</a></li>
-                    <li><a href="<?php echo SITE_URL; ?>/includes/auth.php?logout=1">Logout</a></li>
+                    <li><a href="<?php echo SITE_URL; ?>/public/admin/officials.php">Officials</a></li>
+                    <li><a href="http://localhost/MyWebApp/includes/auth.php?logout=1">Logout</a></li>
                 <?php else: ?>
                     <li><a href="<?php echo SITE_URL; ?>/public/resident/dashboard.php">Dashboard</a></li>
                     <li><a href="<?php echo SITE_URL; ?>/public/resident/file-complaint.php">File Complaint</a></li>
                     <li><a href="<?php echo SITE_URL; ?>/public/resident/my-complaints.php">My Complaints</a></li>
-                    <li><a href="<?php echo SITE_URL; ?>/includes/auth.php?logout=1">Logout</a></li>
+                    <li><a href="<?php echo SITE_URL; ?>/public/resident/profile.php">Profile</a></li>
+                    <li><a href="http://localhost/MyWebApp/includes/auth.php?logout=1">Logout</a></li>
                 <?php endif; ?>
             <?php else: ?>
                 <li><a href="<?php echo SITE_URL; ?>/public/index.php">Home</a></li>

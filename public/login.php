@@ -5,9 +5,11 @@ require_once '../includes/auth.php';
 
 if (isLoggedIn()) {
     if (isAdmin()) {
-        redirect('admin/dashboard.php');
+        header('Location: ' . SITE_URL . '/admin/dashboard.php');
+        exit();
     } else {
-        redirect('resident/dashboard.php');
+        header('Location: ' . SITE_URL . '/resident/dashboard.php');
+        exit();
     }
 }
 
@@ -16,18 +18,18 @@ $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = sanitizeInput($_POST['username']);
     $password = $_POST['password'];
-    $login_type = $_POST['login_type'];
     
-    $isAdmin = ($login_type === 'admin');
-    
-    if (login($username, $password, $isAdmin)) {
-        if ($isAdmin) {
-            redirect('admin/dashboard.php');
+    if (login($username, $password)) {
+        // Role is automatically detected from database
+        if (isAdmin()) {
+            header('Location: ' . SITE_URL . '/public/admin/dashboard.php');
+            exit();
         } else {
-            redirect('resident/dashboard.php');
+            header('Location: ' . SITE_URL . '/public/resident/dashboard.php');
+            exit();
         }
     } else {
-        $error = 'Invalid username or password';
+        $error = 'Invalid email or password';
     }
 }
 
@@ -43,18 +45,10 @@ include '../templates/navbar.php';
             <div class="alert alert-error"><?php echo $error; ?></div>
         <?php endif; ?>
         
-        <form method="POST" action="">
+        <form method="POST" action="login.php">
             <div class="form-group">
-                <label>Login As:</label>
-                <select name="login_type" required>
-                    <option value="resident">Resident</option>
-                    <option value="admin">Admin</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>Username/Email:</label>
-                <input type="text" name="username" required>
+                <label>Email:</label>
+                <input type="text" name="username" required placeholder="your@email.com">
             </div>
             
             <div class="form-group">

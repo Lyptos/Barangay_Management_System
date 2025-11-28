@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 22, 2025 at 02:12 PM
+-- Generation Time: Nov 26, 2025 at 11:31 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,28 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `brngydb`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Admins`
---
-
-CREATE TABLE `Admins` (
-  `AdminID` int(11) NOT NULL,
-  `Username` varchar(50) NOT NULL,
-  `Password` varchar(255) NOT NULL,
-  `FullName` varchar(100) NOT NULL,
-  `Email` varchar(100) DEFAULT NULL,
-  `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `Admins`
---
-
-INSERT INTO `Admins` (`AdminID`, `Username`, `Password`, `FullName`, `Email`, `CreatedAt`) VALUES
-(1, 'admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'System Administrator', 'admin@barangay.com', '2025-11-22 13:10:58');
 
 -- --------------------------------------------------------
 
@@ -125,10 +103,23 @@ CREATE TABLE `Reports` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Residents`
+-- Table structure for table `Services`
 --
 
-CREATE TABLE `Residents` (
+CREATE TABLE `Services` (
+  `ServiceID` int(11) NOT NULL,
+  `ServiceName` varchar(100) DEFAULT NULL,
+  `Description` text DEFAULT NULL,
+  `ResponsibleOfficialID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Users`
+--
+
+CREATE TABLE `Users` (
   `ResidentID` int(11) NOT NULL,
   `FirstName` varchar(50) DEFAULT NULL,
   `LastName` varchar(50) DEFAULT NULL,
@@ -144,36 +135,17 @@ CREATE TABLE `Residents` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `Residents`
+-- Dumping data for table `Users`
 --
 
-INSERT INTO `Residents` (`ResidentID`, `FirstName`, `LastName`, `BirthDate`, `Gender`, `Address`, `ContactNumber`, `Email`, `Password`, `Role`, `CreatedAt`, `HouseholdID`) VALUES
+INSERT INTO `Users` (`ResidentID`, `FirstName`, `LastName`, `BirthDate`, `Gender`, `Address`, `ContactNumber`, `Email`, `Password`, `Role`, `CreatedAt`, `HouseholdID`) VALUES
 (1, 'Juan', 'Dela Cruz', '1990-05-15', 'Male', '123 Main St, Barangay Centro', '09171234567', 'juan@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'resident', '2025-11-22 13:10:58', NULL),
-(2, 'Maria', 'Santos', '1985-08-20', 'Female', '456 Second St, Barangay Centro', '09187654321', 'maria@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'resident', '2025-11-22 13:10:58', NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Services`
---
-
-CREATE TABLE `Services` (
-  `ServiceID` int(11) NOT NULL,
-  `ServiceName` varchar(100) DEFAULT NULL,
-  `Description` text DEFAULT NULL,
-  `ResponsibleOfficialID` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+(2, 'Maria', 'Santos', '1985-08-20', 'Female', '456 Second St, Barangay Centro', '09187654321', 'maria@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'resident', '2025-11-22 13:10:58', NULL),
+(3, 'Admin', 'User', NULL, NULL, NULL, NULL, 'admin', '$2y$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL2Lafd2', 'admin', '2025-11-26 10:30:56', NULL);
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `Admins`
---
-ALTER TABLE `Admins`
-  ADD PRIMARY KEY (`AdminID`),
-  ADD UNIQUE KEY `Username` (`Username`);
 
 --
 -- Indexes for table `Households`
@@ -205,14 +177,6 @@ ALTER TABLE `Reports`
   ADD KEY `fk_reports_generatedby` (`GeneratedBy`);
 
 --
--- Indexes for table `Residents`
---
-ALTER TABLE `Residents`
-  ADD PRIMARY KEY (`ResidentID`),
-  ADD UNIQUE KEY `Email` (`Email`),
-  ADD KEY `fk_residents_household` (`HouseholdID`);
-
---
 -- Indexes for table `Services`
 --
 ALTER TABLE `Services`
@@ -220,14 +184,16 @@ ALTER TABLE `Services`
   ADD KEY `fk_services_official` (`ResponsibleOfficialID`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- Indexes for table `Users`
 --
+ALTER TABLE `Users`
+  ADD PRIMARY KEY (`ResidentID`),
+  ADD UNIQUE KEY `Email` (`Email`),
+  ADD KEY `fk_residents_household` (`HouseholdID`);
 
 --
--- AUTO_INCREMENT for table `Admins`
+-- AUTO_INCREMENT for dumped tables
 --
-ALTER TABLE `Admins`
-  MODIFY `AdminID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `Households`
@@ -254,16 +220,16 @@ ALTER TABLE `Reports`
   MODIFY `ReportID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `Residents`
---
-ALTER TABLE `Residents`
-  MODIFY `ResidentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
 -- AUTO_INCREMENT for table `Services`
 --
 ALTER TABLE `Services`
   MODIFY `ServiceID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `Users`
+--
+ALTER TABLE `Users`
+  MODIFY `ResidentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -273,14 +239,14 @@ ALTER TABLE `Services`
 -- Constraints for table `Households`
 --
 ALTER TABLE `Households`
-  ADD CONSTRAINT `fk_households_head` FOREIGN KEY (`HeadOfHousehold`) REFERENCES `Residents` (`ResidentID`);
+  ADD CONSTRAINT `fk_households_head` FOREIGN KEY (`HeadOfHousehold`) REFERENCES `Users` (`ResidentID`);
 
 --
 -- Constraints for table `Incidents`
 --
 ALTER TABLE `Incidents`
   ADD CONSTRAINT `fk_incidents_handledby` FOREIGN KEY (`HandledBy`) REFERENCES `Officials` (`OfficialID`),
-  ADD CONSTRAINT `fk_incidents_reportedby` FOREIGN KEY (`ReportedBy`) REFERENCES `Residents` (`ResidentID`);
+  ADD CONSTRAINT `fk_incidents_reportedby` FOREIGN KEY (`ReportedBy`) REFERENCES `Users` (`ResidentID`);
 
 --
 -- Constraints for table `Reports`
@@ -289,16 +255,16 @@ ALTER TABLE `Reports`
   ADD CONSTRAINT `fk_reports_generatedby` FOREIGN KEY (`GeneratedBy`) REFERENCES `Officials` (`OfficialID`);
 
 --
--- Constraints for table `Residents`
---
-ALTER TABLE `Residents`
-  ADD CONSTRAINT `fk_residents_household` FOREIGN KEY (`HouseholdID`) REFERENCES `Households` (`HouseholdID`);
-
---
 -- Constraints for table `Services`
 --
 ALTER TABLE `Services`
   ADD CONSTRAINT `fk_services_official` FOREIGN KEY (`ResponsibleOfficialID`) REFERENCES `Officials` (`OfficialID`);
+
+--
+-- Constraints for table `Users`
+--
+ALTER TABLE `Users`
+  ADD CONSTRAINT `fk_residents_household` FOREIGN KEY (`HouseholdID`) REFERENCES `Households` (`HouseholdID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

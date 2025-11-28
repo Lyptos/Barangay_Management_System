@@ -6,73 +6,124 @@ require_once '../../includes/auth.php';
 requireLogin();
 requireAdmin();
 
-$db = new Database();
-$conn = $db->connect();
+$success = '';
+$error = '';
 
-$search = isset($_GET['search']) ? sanitizeInput($_GET['search']) : '';
-
-$sql = "SELECT * FROM Residents";
-if ($search) {
-    $sql .= " WHERE CONCAT(FirstName, ' ', LastName) LIKE ? OR Email LIKE ? OR ContactNumber LIKE ?";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $first_name = sanitizeInput($_POST['first_name']);
+    $last_name = sanitizeInput($_POST['last_name']);
+    $email = sanitizeInput($_POST['email']);
+    $contact_number = sanitizeInput($_POST['contact_number']);
+    $address = sanitizeInput($_POST['address']);
+    $birth_date = sanitizeInput($_POST['birth_date']);
+    $gender = sanitizeInput($_POST['gender']);
+    $password = 'password123'; // Default password
+    
+    if (register($first_name, $last_name, $email, $password, $contact_number, $address, $birth_date, $gender)) {
+        $success = 'Resident added successfully! Default password: password123';
+    } else {
+        $error = 'Failed to add resident. Email may already exist.';
+    }
 }
-$sql .= " ORDER BY LastName, FirstName ASC";
 
-$stmt = $conn->prepare($sql);
-if ($search) {
-    $search_param = "%$search%";
-    $stmt->bind_param("sss", $search_param, $search_param, $search_param);
-}
-$stmt->execute();
-$residents = $stmt->get_result();
+$residents = getResidents();
 
-$page_title = 'Residents';
+$page_title = 'Manage Residents';
 include '../../templates/header.php';
 include '../../templates/navbar.php';
 ?>
 
 <div class="container">
-    <h1>Registered Residents</h1>
+    <h1>Manage Residents</h1>
     
-    <div class="search-bar">
-        <form method="GET" action="">
-            <input type="text" name="search" placeholder="Search residents..." value="<?php echo $search; ?>">
-            <button type="submit" class="btn btn-primary">Search</button>
-            <?php if ($search): ?>
-                <a href="residents.php" class="btn btn-secondary">Clear</a>
-            <?php endif; ?>
+    <?php if ($success): ?>
+        <div class="alert alert-success"><?php echo $success; ?></div>
+    <?php endif; ?>
+    
+    <?php if ($error): ?>
+        <div class="alert alert-error"><?php echo $error; ?></div>
+    <?php endif; ?>
+    
+    <div class="card">
+        <h2>Add New Resident</h2>
+        <form method="POST" action="">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>First Name:</label>
+                    <input type="text" name="first_name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Last Name:</label>
+                    <input type="text" name="last_name" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Contact Number:</label>
+                    <input type="text" name="contact_number" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Birth Date:</label>
+                    <input type="date" name="birth_date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Gender:</label>
+                    <select name="gender" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Address:</label>
+                <textarea name="address" rows="2" required></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Add Resident</button>
         </form>
     </div>
     
-    <?php if ($residents->num_rows > 0): ?>
-        <div class="card">
+    <div class="card">
+        <h2>All Residents</h2>
+        <?php if ($residents->num_rows > 0): ?>
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Full Name</th>
+                        <th>Name</th>
                         <th>Email</th>
-                        <th>Contact Number</th>
+                        <th>Contact</th>
                         <th>Address</th>
-                        <th>Registered</th>
+                        <th>Birth Date</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php while ($resident = $residents->fetch_assoc()): ?>
                         <tr>
-                            <td><?php echo $resident['ResidentID']; ?></td>
                             <td><?php echo $resident['FirstName'] . ' ' . $resident['LastName']; ?></td>
-                            <td><?php echo $resident['Email'] ?: 'N/A'; ?></td>
-                            <td><?php echo $resident['ContactNumber'] ?: 'N/A'; ?></td>
-                            <td><?php echo $resident['Address'] ?: 'N/A'; ?></td>
-                            <td><?php echo $resident['CreatedAt'] ? date('M d, Y', strtotime($resident['CreatedAt'])) : 'N/A'; ?></td>
+                            <td><?php echo $resident['Email']; ?></td>
+                            <td><?php echo $resident['ContactNumber']; ?></td>
+                            <td><?php echo $resident['Address']; ?></td>
+                            <td><?php echo date('M d, Y', strtotime($resident['BirthDate'])); ?></td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
             </table>
-        </div>
-    <?php else: ?>
-        <p>No residents found.</p>
-    <?php endif; ?>
+        <?php else: ?>
+            <p>No residents found.</p>
+        <?php endif; ?>
+    </div>
 </div>
 
 <?php include '../../templates/footer.php'; ?>
