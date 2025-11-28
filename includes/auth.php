@@ -60,13 +60,15 @@ function logout() {
 
 function requireLogin() {
     if (!isLoggedIn()) {
-        redirect('public/login.php');
+        header('Location: ' . SITE_URL . '/public/login.php');
+        exit();
     }
 }
 
 function requireAdmin() {
     if (!isAdmin()) {
-        redirect('public/index.php');
+        header('Location: ' . SITE_URL . '/public/index.php');
+        exit();
     }
 }
 

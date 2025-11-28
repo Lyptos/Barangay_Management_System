@@ -4,7 +4,8 @@ require_once '../includes/functions.php';
 require_once '../includes/auth.php';
 
 if (isLoggedIn()) {
-    redirect('resident/dashboard.php');
+    header('Location: ' . SITE_URL . '/public/resident/dashboard.php');
+    exit();
 }
 
 $error = '';

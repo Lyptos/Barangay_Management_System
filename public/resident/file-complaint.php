@@ -6,7 +6,8 @@ require_once '../../includes/auth.php';
 requireLogin();
 
 if (isAdmin()) {
-    redirect('../admin/dashboard.php');
+    header('Location: ' . SITE_URL . '/public/admin/dashboard.php');
+    exit();
 }
 
 $success = '';

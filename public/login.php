@@ -5,10 +5,10 @@ require_once '../includes/auth.php';
 
 if (isLoggedIn()) {
     if (isAdmin()) {
-        header('Location: ' . SITE_URL . '/admin/dashboard.php');
+        header('Location: ' . SITE_URL . '/public/admin/dashboard.php');
         exit();
     } else {
-        header('Location: ' . SITE_URL . '/resident/dashboard.php');
+        header('Location: ' . SITE_URL . '/public/resident/dashboard.php');
         exit();
     }
 }
