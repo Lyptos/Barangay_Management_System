@@ -106,7 +106,10 @@ include '../../templates/navbar.php';
                         <th>Contact</th>
                         <th>Address</th>
                         <th>Birth Date</th>
+<<<<<<< HEAD
                         <th>Actions</th>
+=======
+>>>>>>> af441e77e32f0536ccfd26b6f3eb2c7525158e2e
                     </tr>
                 </thead>
                 <tbody>
@@ -117,9 +120,12 @@ include '../../templates/navbar.php';
                             <td><?php echo $resident['ContactNumber']; ?></td>
                             <td><?php echo $resident['Address']; ?></td>
                             <td><?php echo date('M d, Y', strtotime($resident['BirthDate'])); ?></td>
+<<<<<<< HEAD
                              <td>
                                 <a href="view-profile.php?id=<?php echo $incident['LastName']; ?>" class="btn btn-sm btn-primary">View</a>
                             </td>
+=======
+>>>>>>> af441e77e32f0536ccfd26b6f3eb2c7525158e2e
                         </tr>
                     <?php endwhile; ?>
                 </tbody>

@@ -12,7 +12,11 @@ define('DB_NAME', 'brngydb');
 
 // Site configuration
 define('SITE_NAME', 'Barangay Management System');
+<<<<<<< HEAD
 define('SITE_URL', 'http://localhost/Barangay_Management_System-main');
+=======
+define('SITE_URL', 'http://localhost/MyWebApp');
+>>>>>>> af441e77e32f0536ccfd26b6f3eb2c7525158e2e
 
 // Session configuration
 if (session_status() === PHP_SESSION_NONE) {

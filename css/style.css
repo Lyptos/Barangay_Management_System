@@ -59,11 +59,15 @@ body {
     color: var(--dark-text);
     text-decoration: none;
     transition: color 0.3s;
+<<<<<<< HEAD
     
+=======
+>>>>>>> af441e77e32f0536ccfd26b6f3eb2c7525158e2e
 }
 
 .nav-menu a:hover {
     color: var(--primary-color);
+<<<<<<< HEAD
     
 }
 
@@ -73,6 +77,10 @@ body {
 
 
 
+=======
+}
+
+>>>>>>> af441e77e32f0536ccfd26b6f3eb2c7525158e2e
 /* Hero Section */
 .hero {
     background: linear-gradient(135deg, var(--primary-color), #1d4ed8);
