@@ -59,7 +59,7 @@ include '../templates/navbar.php';
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
         
-        <p class="text-center">Don't have an account? <a href="register.php">Register here</a></p>
+        <p class="text-center text-muted">Contact the administrator to create an account.</p>
     </div>
 </div>
 

@@ -97,6 +97,39 @@ include '../../templates/navbar.php';
     
     <div class="card">
         <h2>All Residents</h2>
+        
+        <div class="search-bar">
+            <form method="GET" action="">
+                <input type="text" name="search" placeholder="Search by name, email, or contact number..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                <button type="submit" class="btn btn-primary">Search</button>
+                <?php if (isset($_GET['search']) && $_GET['search']): ?>
+                    <a href="residents.php" class="btn btn-secondary">Clear</a>
+                <?php endif; ?>
+            </form>
+        </div>
+        
+        <?php 
+        // Apply search filter
+        $search = isset($_GET['search']) ? sanitizeInput($_GET['search']) : '';
+        
+        if ($search) {
+            $db = new Database();
+            $conn = $db->connect();
+            $sql = "SELECT * FROM Users WHERE Role = 'resident' 
+                    AND (CONCAT(FirstName, ' ', LastName) LIKE ? 
+                    OR Email LIKE ? 
+                    OR ContactNumber LIKE ?) 
+                    ORDER BY LastName, FirstName";
+            $stmt = $conn->prepare($sql);
+            $searchParam = "%{$search}%";
+            $stmt->bind_param("sss", $searchParam, $searchParam, $searchParam);
+            $stmt->execute();
+            $residents = $stmt->get_result();
+        } else {
+            $residents = getResidents();
+        }
+        ?>
+        
         <?php if ($residents->num_rows > 0): ?>
             <table>
                 <thead>
@@ -106,10 +139,7 @@ include '../../templates/navbar.php';
                         <th>Contact</th>
                         <th>Address</th>
                         <th>Birth Date</th>
-<<<<<<< HEAD
                         <th>Actions</th>
-=======
->>>>>>> af441e77e32f0536ccfd26b6f3eb2c7525158e2e
                     </tr>
                 </thead>
                 <tbody>
@@ -120,12 +150,9 @@ include '../../templates/navbar.php';
                             <td><?php echo $resident['ContactNumber']; ?></td>
                             <td><?php echo $resident['Address']; ?></td>
                             <td><?php echo date('M d, Y', strtotime($resident['BirthDate'])); ?></td>
-<<<<<<< HEAD
-                             <td>
-                                <a href="view-profile.php?id=<?php echo $incident['LastName']; ?>" class="btn btn-sm btn-primary">View</a>
+                            <td>
+                                <a href="view-resident.php?id=<?php echo $resident['ResidentID']; ?>" class="btn btn-sm btn-primary">View</a>
                             </td>
-=======
->>>>>>> af441e77e32f0536ccfd26b6f3eb2c7525158e2e
                         </tr>
                     <?php endwhile; ?>
                 </tbody>

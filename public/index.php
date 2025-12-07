@@ -13,7 +13,6 @@ include '../templates/navbar.php';
         <?php if (!isLoggedIn()): ?>
             <div class="hero-buttons">
                 <a href="login.php" class="btn btn-primary">Login</a>
-                <a href="register.php" class="btn btn-secondary">Register</a>
             </div>
         <?php else: ?>
             <div class="hero-buttons">
@@ -32,8 +31,8 @@ include '../templates/navbar.php';
         <h2>How It Works</h2>
         <div class="feature-grid">
             <div class="feature-card">
-                <h3>1. Register</h3>
-                <p>Create your account as a barangay resident</p>
+                <h3>1. Contact Admin</h3>
+                <p>Request account creation from barangay administrator</p>
             </div>
             <div class="feature-card">
                 <h3>2. File Complaint</h3>

@@ -52,17 +52,12 @@ include '../../templates/navbar.php';
     
     <div class="card">
         <h2>Recent Complaints</h2>
-<<<<<<< HEAD
         <br>
         <a href="complaints.php" class="btn btn-secondary">View All Complaints</a>
         <?php if ($recent_incidents->num_rows > 0): ?>
         <br>
             <table>
                    <br>
-=======
-        <?php if ($recent_incidents->num_rows > 0): ?>
-            <table>
->>>>>>> af441e77e32f0536ccfd26b6f3eb2c7525158e2e
                 <thead>
                     <tr>
                         <th>Tracking #</th>
@@ -93,10 +88,6 @@ include '../../templates/navbar.php';
                     <?php endwhile; ?>
                 </tbody>
             </table>
-<<<<<<< HEAD
-=======
-            <a href="complaints.php" class="btn btn-secondary">View All Complaints</a>
->>>>>>> af441e77e32f0536ccfd26b6f3eb2c7525158e2e
         <?php else: ?>
             <p>No complaints filed yet.</p>
         <?php endif; ?>

@@ -72,11 +72,6 @@ include '../../templates/navbar.php';
                 <label>Subject:</label>
                 <input type="text" name="subject" required>
             </div>
-<<<<<<< HEAD
-
-=======
-            
->>>>>>> af441e77e32f0536ccfd26b6f3eb2c7525158e2e
             <div class="form-group">
                 <label>Description:</label>
                 <textarea name="description" rows="6" required></textarea>

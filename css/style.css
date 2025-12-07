@@ -20,6 +20,9 @@ body {
     line-height: 1.6;
     color: var(--dark-text);
     background-color: var(--light-bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .container {
@@ -59,15 +62,11 @@ body {
     color: var(--dark-text);
     text-decoration: none;
     transition: color 0.3s;
-<<<<<<< HEAD
     
-=======
->>>>>>> af441e77e32f0536ccfd26b6f3eb2c7525158e2e
 }
 
 .nav-menu a:hover {
     color: var(--primary-color);
-<<<<<<< HEAD
     
 }
 
@@ -77,10 +76,6 @@ body {
 
 
 
-=======
-}
-
->>>>>>> af441e77e32f0536ccfd26b6f3eb2c7525158e2e
 /* Hero Section */
 .hero {
     background: linear-gradient(135deg, var(--primary-color), #1d4ed8);
@@ -154,6 +149,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     margin-bottom: 2rem;
+    min-height: 200px;
 }
 
 .card h2, .card h3 {
@@ -401,6 +397,22 @@ table tbody tr:hover {
     display: flex;
     gap: 1rem;
     margin-bottom: 2rem;
+    min-height: 45px;
+    align-items: center;
+}
+
+.filter-bar .btn {
+    flex-shrink: 0;
+}
+
+/* Card containing tables - prevent layout shift */
+.card {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    min-height: 200px;
 }
 
 /* Search Bar */
@@ -423,33 +435,80 @@ table tbody tr:hover {
 
 /* Complaint Detail */
 .complaint-detail {
-    max-width: 900px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: none;
+}
+
+/* Override container width for complaint detail pages */
+.container:has(.complaint-detail) {
+    max-width: 100%;
+    padding: 20px 40px;
+}
+
+.complaint-detail h1 {
+    margin-bottom: 2rem;
 }
 
 .info-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
     margin-bottom: 2rem;
+}
+
+@media (max-width: 1200px) {
+    .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .container:has(.complaint-detail) {
+        padding: 20px;
+    }
 }
 
 .info-item {
     background: white;
-    padding: 1rem;
+    padding: 1.5rem;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .info-item strong {
     display: block;
     color: var(--secondary-color);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .info-item p {
     margin: 0;
     color: var(--dark-text);
+    font-size: 1.1rem;
+    word-wrap: break-word;
+    font-weight: 500;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+}
+
+.card p {
+    margin-bottom: 0.75rem;
+}
+
+.card p:last-child {
+    margin-bottom: 0;
 }
 
 /* Footer */
@@ -458,7 +517,8 @@ footer {
     color: white;
     text-align: center;
     padding: 2rem 0;
-    margin-top: 3rem;
+    margin-top: auto;
+    width: 100%;
 }
 
 /* Utilities */

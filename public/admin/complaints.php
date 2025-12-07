@@ -7,7 +7,38 @@ requireLogin();
 requireAdmin();
 
 $filter_status = isset($_GET['status']) ? $_GET['status'] : null;
-$incidents = getIncidents($filter_status);
+$search = isset($_GET['search']) ? sanitizeInput($_GET['search']) : '';
+
+// Get incidents with search filter
+if ($search) {
+    $db = new Database();
+    $conn = $db->connect();
+    
+    $sql = "SELECT i.*, CONCAT(u.FirstName, ' ', u.LastName) as resident_name, u.ContactNumber, u.Address 
+            FROM Incidents i 
+            LEFT JOIN Users u ON i.ReportedBy = u.ResidentID 
+            WHERE (i.TrackingNumber LIKE ? OR i.IncidentType LIKE ? OR CONCAT(u.FirstName, ' ', u.LastName) LIKE ?)";
+    
+    if ($filter_status) {
+        $sql .= " AND i.Status = ?";
+    }
+    
+    $sql .= " ORDER BY i.DateReported DESC";
+    
+    $stmt = $conn->prepare($sql);
+    $searchParam = "%{$search}%";
+    
+    if ($filter_status) {
+        $stmt->bind_param("ssss", $searchParam, $searchParam, $searchParam, $filter_status);
+    } else {
+        $stmt->bind_param("sss", $searchParam, $searchParam, $searchParam);
+    }
+    
+    $stmt->execute();
+    $incidents = $stmt->get_result();
+} else {
+    $incidents = getIncidents($filter_status);
+}
 
 $page_title = 'Manage Complaints';
 include '../../templates/header.php';
@@ -17,11 +48,24 @@ include '../../templates/navbar.php';
 <div class="container">
     <h1>Manage Complaints/Incidents</h1>
     
+    <div class="search-bar">
+        <form method="GET" action="">
+            <input type="text" name="search" placeholder="Search by tracking number, type, or resident name..." value="<?php echo htmlspecialchars($search); ?>">
+            <?php if ($filter_status): ?>
+                <input type="hidden" name="status" value="<?php echo htmlspecialchars($filter_status); ?>">
+            <?php endif; ?>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <?php if ($search): ?>
+                <a href="complaints.php<?php echo $filter_status ? '?status=' . urlencode($filter_status) : ''; ?>" class="btn btn-secondary">Clear</a>
+            <?php endif; ?>
+        </form>
+    </div>
+    
     <div class="filter-bar">
-        <a href="complaints.php" class="btn btn-secondary <?php echo !$filter_status ? 'active' : ''; ?>">All</a>
-        <a href="?status=Pending" class="btn btn-secondary <?php echo $filter_status === 'Pending' ? 'active' : ''; ?>">Pending</a>
-        <a href="?status=In Progress" class="btn btn-secondary <?php echo $filter_status === 'In Progress' ? 'active' : ''; ?>">In Progress</a>
-        <a href="?status=Resolved" class="btn btn-secondary <?php echo $filter_status === 'Resolved' ? 'active' : ''; ?>">Resolved</a>
+        <a href="complaints.php<?php echo $search ? '?search=' . urlencode($search) : ''; ?>" class="btn btn-secondary <?php echo !$filter_status ? 'active' : ''; ?>">All</a>
+        <a href="?status=Pending<?php echo $search ? '&search=' . urlencode($search) : ''; ?>" class="btn btn-secondary <?php echo $filter_status === 'Pending' ? 'active' : ''; ?>">Pending</a>
+        <a href="?status=In Progress<?php echo $search ? '&search=' . urlencode($search) : ''; ?>" class="btn btn-secondary <?php echo $filter_status === 'In Progress' ? 'active' : ''; ?>">In Progress</a>
+        <a href="?status=Resolved<?php echo $search ? '&search=' . urlencode($search) : ''; ?>" class="btn btn-secondary <?php echo $filter_status === 'Resolved' ? 'active' : ''; ?>">Resolved</a>
     </div>
     
     <?php if ($incidents->num_rows > 0): ?>
