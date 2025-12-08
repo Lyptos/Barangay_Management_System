@@ -9,6 +9,24 @@ requireAdmin();
 $success = '';
 $error = '';
 
+// Handle delete request
+if (isset($_GET['delete'])) {
+    $official_id = intval($_GET['delete']);
+    
+    $db = new Database();
+    $conn = $db->connect();
+    
+    $delete_sql = "DELETE FROM Officials WHERE OfficialID = ?";
+    $delete_stmt = $conn->prepare($delete_sql);
+    $delete_stmt->bind_param("i", $official_id);
+    
+    if ($delete_stmt->execute()) {
+        $success = 'Official deleted successfully!';
+    } else {
+        $error = 'Failed to delete official.';
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = sanitizeInput($_POST['full_name']);
     $position = sanitizeInput($_POST['position']);
@@ -101,6 +119,7 @@ include '../../templates/navbar.php';
                         <th>Position</th>
                         <th>Term</th>
                         <th>Contact</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -110,6 +129,11 @@ include '../../templates/navbar.php';
                             <td><?php echo $official['Position']; ?></td>
                             <td><?php echo date('M d, Y', strtotime($official['TermStart'])) . ' - ' . date('M d, Y', strtotime($official['TermEnd'])); ?></td>
                             <td><?php echo $official['ContactNumber']; ?></td>
+                            <td>
+                                <a href="officials.php?delete=<?php echo $official['OfficialID']; ?>" 
+                                   class="btn btn-sm btn-danger" 
+                                   onclick="return confirm('Are you sure you want to delete this official?');">Delete</a>
+                            </td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
