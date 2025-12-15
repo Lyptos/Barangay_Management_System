@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 26, 2025 at 11:31 AM
+-- Generation Time: Dec 15, 2025 at 04:07 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -59,8 +59,12 @@ CREATE TABLE `Incidents` (
 --
 
 INSERT INTO `Incidents` (`IncidentID`, `TrackingNumber`, `IncidentType`, `Description`, `DateReported`, `ReportedBy`, `HandledBy`, `Status`, `AdminResponse`, `UpdatedAt`) VALUES
-(1, 'TRK-2024-ABC12345', 'Noise Complaint', 'Loud music from neighbor until late night', '2024-11-20', 1, NULL, 'Pending', NULL, '2025-11-22 13:10:58'),
-(2, 'TRK-2024-DEF67890', 'Street Light', 'Broken street light on Main Street', '2024-11-21', 2, NULL, 'In Progress', NULL, '2025-11-22 13:10:58');
+(1, 'TRK-2024-ABC12345', 'Noise Complaint', 'Loud music from neighbor until late night', '2024-11-20', 1, NULL, 'Resolved', 'then join them lolz xo', '2025-12-08 09:50:39'),
+(2, 'TRK-2024-DEF67890', 'Street Light', 'Broken street light on Main Street', '2024-11-21', 2, NULL, 'In Progress', '', '2025-11-26 12:34:26'),
+(3, 'TRK-2025-0CF811E9', 'security', 'someone&#039;s following me. idk he&#039;s not cute so yes it&#039;s weird.', '2025-11-28', 2, NULL, 'In Progress', 'bahala ka jan', '2025-12-02 12:31:15'),
+(4, 'TRK-2025-A6EF376F', 'noise', 'he is loud in 3am in the morning can you remove or limit the time of his drumming noise', '2025-12-02', 5, NULL, 'In Progress', 'we&#039;re looking into it', '2025-12-05 10:58:50'),
+(5, 'TRK-2025-0024F71F', 'other', 'guitar playing at 11pm', '2025-12-05', 2, NULL, 'Resolved', '', '2025-12-07 11:09:32'),
+(6, 'TRK-2025-C698C14A', 'other', 'Accident happened near (some corner)', '2025-12-11', 2, NULL, 'Pending', NULL, '2025-12-11 12:16:54');
 
 -- --------------------------------------------------------
 
@@ -140,8 +144,9 @@ CREATE TABLE `Users` (
 
 INSERT INTO `Users` (`ResidentID`, `FirstName`, `LastName`, `BirthDate`, `Gender`, `Address`, `ContactNumber`, `Email`, `Password`, `Role`, `CreatedAt`, `HouseholdID`) VALUES
 (1, 'Juan', 'Dela Cruz', '1990-05-15', 'Male', '123 Main St, Barangay Centro', '09171234567', 'juan@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'resident', '2025-11-22 13:10:58', NULL),
-(2, 'Maria', 'Santos', '1985-08-20', 'Female', '456 Second St, Barangay Centro', '09187654321', 'maria@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'resident', '2025-11-22 13:10:58', NULL),
-(3, 'Admin', 'User', NULL, NULL, NULL, NULL, 'admin', '$2y$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL2Lafd2', 'admin', '2025-11-26 10:30:56', NULL);
+(2, 'Enrico', 'Constantino', '1985-08-20', 'Female', 'beverly hills', '0696969696969', 'maria@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'resident', '2025-11-22 13:10:58', NULL),
+(3, 'Admin', 'User', NULL, NULL, NULL, NULL, 'admin', '$2y$10$mxvuT5cc6ytHKbOibxUo2e3fVqaoLhGZMkl07mTVIY5ybEnGjF1gO', 'admin', '2025-11-26 10:30:56', NULL),
+(5, 'Josiah', 'Rosita', '2025-12-25', 'Male', 'tayuman tondo san lazaro', '676767676767', 'josiah@gmail.com', '$2y$10$JKtPlh0UqgcOswUfVycACeo96ofiRqRWuQrj83z/X6C4wrggCoRNm', 'resident', '2025-12-02 12:34:59', NULL);
 
 --
 -- Indexes for dumped tables
@@ -205,7 +210,7 @@ ALTER TABLE `Households`
 -- AUTO_INCREMENT for table `Incidents`
 --
 ALTER TABLE `Incidents`
-  MODIFY `IncidentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `IncidentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `Officials`
@@ -229,7 +234,7 @@ ALTER TABLE `Services`
 -- AUTO_INCREMENT for table `Users`
 --
 ALTER TABLE `Users`
-  MODIFY `ResidentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `ResidentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
