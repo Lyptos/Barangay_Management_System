@@ -27,6 +27,33 @@ include '../templates/navbar.php';
 </div>
 
 <div class="container">
+    <div class="emergency-warning">
+        <h3>⚠️ IMPORTANT NOTICE</h3>
+        <p><strong>This system is for NON-EMERGENCY complaints and minor barangay incidents only.</strong></p>
+        <p>For emergencies, please call the appropriate hotline immediately:</p>
+        <div class="hotline-grid">
+            <div class="hotline-item">
+                <strong>🚨 National Emergency Hotline:</strong> 911
+            </div>
+            <div class="hotline-item">
+                <strong>👮 PNP Hotline:</strong> 117
+            </div>
+            <div class="hotline-item">
+                <strong>🚒 BFP Fire Emergency:</strong> 160
+            </div>
+            <div class="hotline-item">
+                <strong>🚑 Red Cross Emergency:</strong> 143
+            </div>
+            <div class="hotline-item">
+                <strong>📞 NDRRMC Hotline:</strong> 1-6-3-6-5
+            </div>
+            <div class="hotline-item">
+                <strong>👥 DSWD Crisis Line:</strong> 1-5-0-5
+            </div>
+        </div>
+    </div>
+
+<div class="container">
     <section class="features">
         <h2>How It Works</h2>
         <div class="feature-grid">
